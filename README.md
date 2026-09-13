@@ -1,11 +1,11 @@
 # Hello Go
 
-This project contains a sample HTTP API and basic Go tutorials in `go_basic/`.
+A small Go learning repository containing a basic HTTP API and introductory Go examples.
 
 ## Requirements
 
-- Go **1.27.1**, as specified in `tutorial/go.mod`
-- macOS or another operating system supported by Go
+- Go 1.27.1 for the HTTP API (`tutorial/go.mod`)
+- Go 1.26.4 for the BornToDev examples (`go_basic_borntodev/go.mod`)
 
 Check the installed version:
 
@@ -13,7 +13,7 @@ Check the installed version:
 go version
 ```
 
-## Project structure
+## Repository structure
 
 ```text
 hello-go/
@@ -21,109 +21,89 @@ hello-go/
 ├── tutorial/
 │   ├── go.mod
 │   └── main.go
-└── go_basic/
-    ├── 1.go_variables.go
-    ├── 2.go_constants.go
-    ├── 3.go_arrays.go
-    ├── 4.go_slices.go
-    ├── 5.go_maps.go
-    ├── 6.go_loop.go
-    ├── 7.go_functions.go
-    ├── 8.go_struct.go
-    ├── 9.go_package.go
-    └── calculator/app.go
+├── go_basic_kongruksiam/
+│   ├── 1_go_variables.go
+│   ├── 2_go_constants.go
+│   ├── 3_go_arrays.go
+│   ├── 4_go_slices.go
+│   ├── 5_go_maps.go
+│   ├── 6_go_loop.go
+│   ├── 7_go_functions.go
+│   ├── 8_go_struct.go
+│   ├── 9_go_package.go
+│   └── calculator/app.go
+└── go_basic_borntodev/
+    ├── go.mod
+    ├── main.go
+    └── 01_go_arrays.go
 ```
 
 ## Run the HTTP API
 
-Change to the `tutorial/` directory first because that is where `go.mod` is located:
+The API module is located in `tutorial/`:
 
 ```sh
 cd tutorial
 go run .
 ```
 
-The server listens on `http://localhost:8080`. Press `Ctrl+C` to stop it. From another terminal, call the endpoint with:
+The server listens on `http://localhost:8080`. Test it from another terminal:
 
 ```sh
 curl -i http://localhost:8080/hello
 ```
 
-`GET /hello` returns `200 OK` with the following message:
+`GET /hello` returns `200 OK` with a greeting. Other HTTP methods return
+`405 Method Not Allowed`.
 
-```text
-Hello from Go on Omarchy!
-```
+### Verify the API
 
-Other methods sent to `/hello` return `405 Method Not Allowed`:
-
-```sh
-curl -i -X POST http://localhost:8080/hello
-```
-
-## Build and verify the API
-
-Run these commands from the `tutorial/` directory:
+Run these commands from `tutorial/`:
 
 ```sh
 go test .
 go vet .
 go build -o hello-go .
-./hello-go
 ```
 
-## Basic Go tutorials
+## Run the basic examples
 
-Each file has its own `package main` and `func main()`. Run files individually from the project root:
+The files in `go_basic_kongruksiam/` are separate `package main` examples.
+Run one file at a time from the repository root:
 
 ```sh
-go run go_basic/1.go_variables.go
-go run go_basic/3.go_arrays.go
-go run go_basic/8.go_struct.go
+go run go_basic_kongruksiam/1_go_variables.go
+go run go_basic_kongruksiam/3_go_arrays.go
+go run go_basic_kongruksiam/8_go_struct.go
 ```
 
 | File | Topic |
 |---|---|
-| `1.go_variables.go` | Variables and data types |
-| `2.go_constants.go` | Constants |
-| `3.go_arrays.go` | Arrays |
-| `4.go_slices.go` | Slices, `len`, `cap`, and `append` |
-| `5.go_maps.go` | Key/value maps |
-| `6.go_loop.go` | `for` and `range` |
-| `7.go_functions.go` | Functions and return values |
-| `8.go_struct.go` | Structs and a `Person` slice |
-| `9.go_package.go` | Calling the `calculator` package |
+| `1_go_variables.go` | Variables and data types |
+| `2_go_constants.go` | Constants |
+| `3_go_arrays.go` | Arrays |
+| `4_go_slices.go` | Slices, `len`, `cap`, and `append` |
+| `5_go_maps.go` | Maps |
+| `6_go_loop.go` | `for` and `range` |
+| `7_go_functions.go` | Functions and return values |
+| `8_go_struct.go` | Structs and slices of structs |
+| `9_go_package.go` | Calling the `calculator` package |
 
-### Note about example 9
+Do not run all tutorial files together because each file defines its own
+`main` function.
 
-This example imports `hello-go/go_basic/calculator`, but the current module is in `tutorial/`. Create a module for the tutorials first:
+The examples are based on these learning resources:
 
-```sh
-cd go_basic
-go mod init hello-go/go_basic
-go run 9.go_package.go
-```
+- [Kongruksiam Go tutorial](https://youtu.be/pytqhPDTjnQ?si=ny6qhAodjOly_mJG)
+- [BornToDev Go tutorial](https://youtu.be/fjEB75Xotxc?si=pJxwbRGYnWqfOg5n)
 
-Expected output:
+## Notes
 
-```text
-7
-5
-```
-
-The `go mod init` command creates `go_basic/go.mod`. To undo this setup, remove that file manually after confirming that it is no longer needed.
-
-## Troubleshooting
-
-- `go.mod file not found`: Change to `tutorial/` before running the API.
-- `main redeclared`: Do not run all files in `go_basic/` together; specify one file at a time.
-- `package ... is not in std` in example 9: Create `go_basic/go.mod` using the command above.
-- `address already in use`: Stop the existing server with `Ctrl+C` or change the port in `tutorial/main.go`.
-
-## Scope
-
-This code is intended for learning and uses only the Go standard library. The API is not production-ready; production deployment should add HTTPS, rate limiting, server timeouts, logging, and monitoring.
-
-## Learning resource
-
-The basic examples reference this [Go tutorial video](https://youtu.be/pytqhPDTjnQ), as listed in `go_basic/readme.md`.
+- The repository contains multiple independent Go modules. Run commands from
+  the module directory required by that example.
+- `9_go_package.go` currently uses the historical import path
+  `hello-go/go_basic/calculator`; update the import path before running it
+  after the directory rename to `go_basic_kongruksiam`.
+- This is a learning project and is not production-ready. A production API
+  should add HTTPS, rate limiting, server timeouts, structured logging, and
+  monitoring.
