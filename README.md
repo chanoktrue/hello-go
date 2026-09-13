@@ -39,6 +39,9 @@ hello-go/
 │   ├── 11_handle.go
 │   ├── 12_jsonMarshal.go
 │   ├── 13_jsonUnMarshal.go
+│   ├── 14_workwithrequest.go
+│   ├── 15_middleware.go
+│   ├── 16_CORS.go
 │   ├── products.csv
 │   └── main.go
 └── go_basic_kongruksiam/
@@ -92,6 +95,9 @@ go run 7_gorutine.go
 go run 8_defer.go
 go run 12_jsonMarshal.go
 go run 13_jsonUnMarshal.go
+go run 14_workwithrequest.go
+go run 15_middleware.go
+go run 16_CORS.go
 ```
 
 | File | Topic |
@@ -110,6 +116,65 @@ go run 13_jsonUnMarshal.go
 | `11_handle.go` | HTTP handling |
 | `12_jsonMarshal.go` | Go values to JSON with `json.Marshal` |
 | `13_jsonUnMarshal.go` | JSON to Go values with `json.Unmarshal` |
+| `14_workwithrequest.go` | HTTP GET and POST requests with JSON |
+| `15_middleware.go` | HTTP middleware |
+| `16_CORS.go` | CORS middleware and preflight requests |
+
+### Product API
+
+Run the product API from `go_basic_borntodev`:
+
+```sh
+go run 14_workwithrequest.go
+```
+
+Get all products:
+
+```sh
+curl http://127.0.0.1:8000/product
+```
+
+Create a product:
+
+```sh
+curl -X POST http://127.0.0.1:8000/product \
+  -H "Content-Type: application/json" \
+  -d '{"name":"DD","price":40}'
+
+Update product `1`:
+
+```sh
+curl -X PUT http://127.0.0.1:8000/product/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"AA Updated","price":99}'
+```
+
+Delete product `1`:
+
+```sh
+curl -X DELETE http://127.0.0.1:8000/product/1
+```
+
+The API supports `GET`, `POST`, `PUT`, and `DELETE`. Product data is stored in
+memory for learning purposes and is lost when the server stops.
+
+### Middleware and CORS
+
+Run the middleware example:
+
+```sh
+go run 15_middleware.go
+```
+
+Run the CORS example:
+
+```sh
+go run 16_CORS.go
+```
+
+The CORS example accepts browser requests from `http://localhost:3000` and
+`http://127.0.0.1:3000`, including `OPTIONS` preflight requests.
+```
 
 ## CSV example
 
