@@ -11,7 +11,6 @@ func main() {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
-
 		fmt.Fprintln(w, "Hello from Go on Omarchy!")
 	})
 
