@@ -44,7 +44,7 @@ hello-go/
 │   ├── 16_CORS.go
 │   ├── products.csv
 │   └── main.go
-└── go_basic_kongruksiam/
+├── go_basic_kongruksiam/
     ├── 1_variable.go
     ├── 2_constant.go
     ├── 3_array.go
@@ -55,6 +55,9 @@ hello-go/
     ├── 8_struct.go
     ├── 9_package.go
     └── calculator/app.go
+└── go_api_chatgpt/
+    ├── go.mod
+    └── main.go
 ```
 
 ## Run the HTTP server
@@ -122,41 +125,52 @@ go run 16_CORS.go
 
 ### Product API
 
-Run the product API from `go_basic_borntodev`:
+Run the CRUD product API from `go_api_chatgpt`:
 
 ```sh
-go run 14_workwithrequest.go
+cd go_api_chatgpt
+go run .
 ```
+
+The server listens on `http://127.0.0.1:8080` and stores product data in
+memory for learning purposes. Changes are lost when the server stops.
 
 Get all products:
 
 ```sh
-curl http://127.0.0.1:8000/product
+curl http://127.0.0.1:8080/products
+```
+
+Get product `P001`:
+
+```sh
+curl http://127.0.0.1:8080/products/P001
 ```
 
 Create a product:
 
 ```sh
-curl -X POST http://127.0.0.1:8000/product \
+curl -X POST http://127.0.0.1:8080/products \
   -H "Content-Type: application/json" \
-  -d '{"name":"DD","price":40}'
-
-Update product `1`:
-
-```sh
-curl -X PUT http://127.0.0.1:8000/product/1 \
-  -H "Content-Type: application/json" \
-  -d '{"name":"AA Updated","price":99}'
+  -d '{"productCode":"P003","productName":"Keyboard","price":900}'
 ```
 
-Delete product `1`:
+Update product `P001`:
 
 ```sh
-curl -X DELETE http://127.0.0.1:8000/product/1
+curl -X PUT http://127.0.0.1:8080/products/P001 \
+  -H "Content-Type: application/json" \
+  -d '{"productCode":"P001","productName":"Studio Speaker","price":2800}'
 ```
 
-The API supports `GET`, `POST`, `PUT`, and `DELETE`. Product data is stored in
-memory for learning purposes and is lost when the server stops.
+Delete product `P001`:
+
+```sh
+curl -X DELETE http://127.0.0.1:8080/products/P001
+```
+
+The API supports `GET`, `POST`, `PUT`, and `DELETE` for `/products` and
+`/products/{code}`.
 
 ### Middleware and CORS
 
@@ -174,7 +188,6 @@ go run 16_CORS.go
 
 The CORS example accepts browser requests from `http://localhost:3000` and
 `http://127.0.0.1:3000`, including `OPTIONS` preflight requests.
-```
 
 ## CSV example
 
