@@ -47,10 +47,74 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(product)
 }
 
+func getProduct(w http.ResponseWriter, r *http.Request) {
+	code := r.PathValue("code")
+
+	// fmt.Println("code =")
+
+	for _, product := range products {
+		if product.ProductCode == code {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode((product))
+			return
+		}
+	}
+
+	http.Error(w, "Product not found", http.StatusNotFound)
+}
+
+func updateProduct(w http.ResponseWriter, r *http.Request) {
+	code := r.PathValue("code")
+
+	fmt.Println("code =", code)
+
+	var input Product
+
+	fmt.Println("input1 =", input)
+
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		http.Error(w, "Invalid JONS", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Println("input2 =", input)
+
+	for i, product := range products {
+		if product.ProductCode == code {
+			products[i] = input
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(products[i])
+			return
+		}
+	}
+
+	http.Error(w, "Product not found", http.StatusNotFound)
+}
+
+func deleteProduct(w http.ResponseWriter, r *http.Request) {
+	code := r.PathValue("code")
+
+	for i, product := range products {
+		if product.ProductCode == code {
+			products = append(products[:i], products[i+1:]...)
+
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+	}
+
+	http.Error(w, "Product not found", http.StatusNotFound)
+}
+
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /products", getProducts)
+	mux.HandleFunc("GET /products/{code}", getProduct)
 	mux.HandleFunc("POST /products", createProduct)
+	mux.HandleFunc("PUT /products/{code}", updateProduct)
+	mux.HandleFunc("DELETE /products/{code}", deleteProduct)
 
 	fmt.Println("Server runnin on http://localhost:8080")
 
