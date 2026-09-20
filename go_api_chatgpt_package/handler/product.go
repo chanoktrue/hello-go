@@ -22,7 +22,7 @@ var products = []model.Product{
 }
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
-	products := service.GetProduct()
+	products := service.GetProducts()
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(products)
@@ -31,15 +31,14 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 func GetProduct(w http.ResponseWriter, r *http.Request) {
 	code := r.PathValue("code")
 
-	for _, product := range products {
-		if product.ProductCode == code {
-			w.Header().Set("Content-type", "application/json")
-			json.NewEncoder(w).Encode(product)
-			return
-		}
+	product, found := service.GetProduct(code)
+	if !found {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
 	}
 
-	http.Error(w, "Product not foun", http.StatusNotFound)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode((product))
 }
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +50,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	products = append(products, product)
+	product = service.CreateProduct(product)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -70,32 +69,27 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	input.ProductCode = code
+	product, found := service.UpdateProduct(code, input)
 
-	for i, product := range products {
-		if product.ProductCode == code {
-			products[i] = input
-
-			w.Header().Set("Content-Type", "applicaton/jsn")
-			json.NewEncoder(w).Encode(product)
-			return
-		}
+	if !found {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
 	}
 
-	http.Error(w, "Product not found", http.StatusNotFound)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(product)
 }
 
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	code := r.PathValue("code")
 
-	for i, product := range products {
-		if product.ProductCode == code {
-			products = append(products[:i], products[i+1:]...)
+	deleted := service.DeleteProduct(code)
 
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
+	if !deleted {
+		http.Error(w, "Product not found", http.StatusNotFound)
+
+		return
 	}
 
-	http.Error(w, "Product not found", http.StatusNotFound)
+	w.WriteHeader(http.StatusNoContent)
 }
