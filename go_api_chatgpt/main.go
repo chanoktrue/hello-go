@@ -98,6 +98,10 @@ func deleteProduct(w http.ResponseWriter, r *http.Request) {
 
 	for i, product := range products {
 		if product.ProductCode == code {
+			/*
+				products[:i] เอาข้อมูลก่อนหน้า index i
+				products[i:] เอาตั้งแต่ index i จนถึงตัวสุดท้าย
+			*/
 			products = append(products[:i], products[i+1:]...)
 
 			w.WriteHeader(http.StatusNoContent)

@@ -11,4 +11,6 @@ func main() {
 	fmt.Println("name: ", name[0:1])
 	fmt.Println("name: ", name[1:3])
 
+	name = append(name[:2], name[2+1:]...)
+	fmt.Println("---> ", name)
 }
