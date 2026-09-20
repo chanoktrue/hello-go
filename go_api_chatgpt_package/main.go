@@ -10,6 +10,10 @@ import (
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /products", handler.GetProducts)
+	mux.HandleFunc("GET /products/{code}", handler.GetProduct)
+	mux.HandleFunc("POST /products", handler.CreateProduct)
+	mux.HandleFunc("PUT /products/{code}", handler.UpdateProduct)
+	mux.HandleFunc("DELETE /products/{code}", handler.DeleteProduct)
 
 	fmt.Println("Server runnin on http://localhost:8080")
 
