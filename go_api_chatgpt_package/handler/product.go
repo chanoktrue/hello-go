@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/chanoktrue/go_api_chatgpt_package/model"
+	"github.com/chanoktrue/go_api_chatgpt_package/service"
 )
 
 var products = []model.Product{
@@ -21,6 +22,8 @@ var products = []model.Product{
 }
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
+	products := service.GetProduct()
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(products)
 }
