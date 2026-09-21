@@ -1,6 +1,10 @@
 package service
 
-import "github.com/chanoktrue/go_api_chatgpt_package/model"
+import (
+	"errors"
+
+	"github.com/chanoktrue/go_api_chatgpt_package/model"
+)
 
 var products = []model.Product{
 	{
@@ -29,10 +33,23 @@ func GetProduct(code string) (model.Product, bool) {
 	return model.Product{}, false
 }
 
-func CreateProduct(product model.Product) model.Product {
+func CreateProduct(product model.Product) (model.Product, error) {
+
+	if product.ProductCode == "" {
+		return model.Product{}, errors.New("product code is required")
+	}
+
+	if product.ProductName == "" {
+		return model.Product{}, errors.New("product name is required")
+	}
+
+	if product.Price <= 0 {
+		return model.Product{}, errors.New("price must be graeter than 0")
+	}
+
 	products = append(products, product)
 
-	return product
+	return product, nil
 }
 
 func UpdateProduct(code string, input model.Product) (model.Product, bool) {
