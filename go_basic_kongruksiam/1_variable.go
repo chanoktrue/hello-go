@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-var name, age = "Alice", 20 // Using var with multiple variables
+var name, age = "Alice-Github", 20 // Using var with multiple variables
 
 func main() {
 
