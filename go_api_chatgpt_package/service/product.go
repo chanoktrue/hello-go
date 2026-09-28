@@ -6,6 +6,11 @@ import (
 	"github.com/chanoktrue/go_api_chatgpt_package/model"
 )
 
+// Errors
+var ErrorProductCodeExists = errors.New("product code already exists")
+var ErrorProductNotFound = errors.New("product not found")
+
+// Data
 var products = []model.Product{
 	{
 		ProductCode: "P001",
@@ -23,14 +28,14 @@ func GetProducts() []model.Product {
 	return products
 }
 
-func GetProduct(code string) (model.Product, bool) {
+func GetProduct(code string) (model.Product, error) {
 	for _, product := range products {
 		if product.ProductCode == code {
-			return product, true
+			return product, nil
 		}
 	}
 
-	return model.Product{}, false
+	return model.Product{}, ErrorProductNotFound
 }
 
 func CreateProduct(product model.Product) (model.Product, error) {

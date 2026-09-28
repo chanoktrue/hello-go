@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/chanoktrue/go_api_chatgpt_package/model"
@@ -31,9 +32,14 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 func GetProduct(w http.ResponseWriter, r *http.Request) {
 	code := r.PathValue("code")
 
-	product, found := service.GetProduct(code)
-	if !found {
-		http.Error(w, "Product not found", http.StatusNotFound)
+	product, err := service.GetProduct(code)
+	if err != nil {
+		if errors.Is(err, service.ErrorProductNotFound) {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
