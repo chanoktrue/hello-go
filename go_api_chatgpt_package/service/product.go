@@ -57,28 +57,28 @@ func CreateProduct(product model.Product) (model.Product, error) {
 	return product, nil
 }
 
-func UpdateProduct(code string, input model.Product) (model.Product, bool) {
+func UpdateProduct(code string, input model.Product) (model.Product, error) {
 	input.ProductCode = code
 
 	for i, product := range products {
 		if product.ProductCode == code {
 			products[i] = input
 
-			return products[i], true
+			return products[i], nil
 		}
 	}
 
-	return model.Product{}, false
+	return model.Product{}, ErrorProductNotFound
 }
 
-func DeleteProduct(code string) bool {
+func DeleteProduct(code string) error {
 	for i, proudct := range products {
 		if proudct.ProductCode == code {
 			products = append(products[:i], products[i+1:]...)
 
-			return true
+			return nil
 		}
 	}
 
-	return false
+	return ErrorProductNotFound
 }

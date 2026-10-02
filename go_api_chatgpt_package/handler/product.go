@@ -79,10 +79,15 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product, found := service.UpdateProduct(code, input)
+	product, err := service.UpdateProduct(code, input)
 
-	if !found {
-		http.Error(w, "Product not found", http.StatusNotFound)
+	if err != nil {
+		if errors.Is(err, service.ErrorProductNotFound) {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
@@ -93,11 +98,15 @@ func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	code := r.PathValue("code")
 
-	deleted := service.DeleteProduct(code)
+	err := service.DeleteProduct(code)
 
-	if !deleted {
-		http.Error(w, "Product not found", http.StatusNotFound)
+	if err != nil {
+		if errors.Is(err, service.ErrorProductNotFound) {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
 
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 
